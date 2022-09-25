@@ -1,0 +1,313 @@
+\documentclass[11pt]{article}
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{url}
+\usepackage{wrapfig}
+\usepackage{color}
+\usepackage{marvosym}
+\usepackage{enumerate}
+\usepackage{subfigure}
+\usepackage{tikz}
+\usepackage[fleqn]{amsmath}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage[many]{tcolorbox}
+\usepackage{lipsum}
+\usepackage{float}
+\usepackage{trimclip}
+\usepackage{listings}
+\usepackage{environ}% http://ctan.org/pkg/environ
+\usepackage{wasysym}
+\usepackage{array}
+\usepackage{cancel}
+
+
+\oddsidemargin 0mm
+\evensidemargin 5mm
+\topmargin -20mm
+\textheight 240mm
+\textwidth 160mm
+
+\newcommand{\vwi}{{\bf w}_i}
+\newcommand{\vw}{{\bf w}}
+\newcommand{\vx}{{\bf x}}
+\newcommand{\vy}{{\bf y}}
+\newcommand{\vxi}{{\bf x}_i}
+\newcommand{\yi}{y_i}
+\newcommand{\vxj}{{\bf x}_j}
+\newcommand{\vxn}{{\bf x}_n}
+\newcommand{\yj}{y_j}
+\newcommand{\ai}{\alpha_i}
+\newcommand{\aj}{\alpha_j}
+\newcommand{\X}{{\bf X}}
+\newcommand{\Y}{{\bf Y}}
+\newcommand{\vz}{{\bf z}}
+\newcommand{\msigma}{{\bf \Sigma}}
+\newcommand{\vmu}{{\bf \mu}}
+\newcommand{\vmuk}{{\bf \mu}_k}
+\newcommand{\msigmak}{{\bf \Sigma}_k}
+\newcommand{\vmuj}{{\bf \mu}_j}
+\newcommand{\msigmaj}{{\bf \Sigma}_j}
+\newcommand{\pij}{\pi_j}
+\newcommand{\pik}{\pi_k}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\el}{\mathcal{L}}
+\newcommand{\N}{\mathcal{N}}
+\newcommand{\vxij}{{\bf x}_{ij}}
+\newcommand{\vt}{{\bf t}}
+\newcommand{\yh}{\hat{y}}
+\newcommand{\code}[1]{{\footnotesize \tt #1}}
+\newcommand{\alphai}{\alpha_i}
+\newcommand{\defeq}{\overset{\text{def}}{=}}
+\renewcommand{\vec}[1]{\mathbf{#1}}
+
+
+
+\bgroup
+\def\arraystretch{1.5}
+\newcolumntype{x}[1]{>{\centering\arraybackslash\hspace{0pt}}p{#1}}
+\newcolumntype{z}[1]{>{\centering\arraybackslash}m{#1}}
+
+%Arguments are 1 - height, 2 - box title
+\newtcolorbox{textanswerbox}[2]{%
+ width=\textwidth,colback=white,colframe=blue!30!black,floatplacement=H,height=#1,title=#2,clip lower=true,before upper={\parindent0em}}
+
+ \newtcolorbox{eqanswerbox}[1]{%
+ width=#1,colback=white,colframe=black,floatplacement=H,height=3em,sharp corners=all,clip lower=true,before upper={\parindent0em}}
+
+
+ \NewEnviron{answertext}[2]{
+        \noindent
+        \marginbox*{0pt 10pt}{
+        \clipbox{0pt 0pt 0pt 0pt}{
+        \begin{textanswerbox}{#1}{#2}
+        \BODY
+        \end{textanswerbox}
+        }
+        }
+}
+
+
+ \NewEnviron{answertable}[3]{
+        \noindent
+        \marginbox*{0pt 10pt}{
+        \clipbox{0pt 0pt 0pt 0pt}{
+        \begin{textanswerbox}{#1}{#2}
+                \vspace{-0.5cm}
+                        \begin{table}[H]
+                        \centering
+                        \begin{tabular}{#3}
+                                \BODY
+                        \end{tabular}
+                        \end{table}
+        \end{textanswerbox}
+        }
+        }
+}
+
+
+ \NewEnviron{answerequation}[5]{
+        \noindent
+        \marginbox*{0pt 10pt}{
+        \clipbox{0pt 0pt 0pt 0pt}{
+        \begin{textanswerbox}{#1}{#2}
+                \vspace{-0.5cm}
+                        \begin{table}[H]
+                        \centering
+                \renewcommand{\arraystretch}{0.5}% Tighter
+
+                        \begin{tabular}{#3}
+                                #4 =	&
+                        \clipbox{0pt 0pt 0pt 0pt}{
+
+                        \begin{eqanswerbox}{#5}
+                                $\BODY$
+                        \end{eqanswerbox}
+                        } \\
+                        \end{tabular}
+                        \end{table}
+
+        \end{textanswerbox}
+        }
+        }
+}
+
+
+ \NewEnviron{answerderivation}[2]{
+        \noindent
+        \marginbox*{0pt 10pt}{
+        \clipbox{0pt 0pt 0pt 0pt}{
+        \begin{textanswerbox}{#1}{#2}
+        \BODY
+        \end{textanswerbox}
+        }
+        }
+}
+
+\newcommand{\Checked}{{\LARGE \XBox}}%
+\newcommand{\Unchecked}{{\LARGE \Square}}%
+\newcommand{\TextRequired}{{\textbf{Place Answer Here}}}%
+\newcommand{\EquationRequired}{\textbf{Type Equation Here}}%
+
+
+\newcommand{\answertextheight}{5cm}
+\newcommand{\answertableheight}{4cm}
+\newcommand{\answerequationheight}{2.5cm}
+\newcommand{\answerderivationheight}{14cm}
+
+\newcounter{QuestionCounter}
+\newcounter{SubQuestionCounter}[QuestionCounter]
+\setcounter{SubQuestionCounter}{1}
+
+\newcommand{\subquestiontitle}{Question \theQuestionCounter.\theSubQuestionCounter~}
+\newcommand{\newquestion}{\stepcounter{QuestionCounter}\setcounter{SubQuestionCounter}{1}\newpage}
+\newcommand{\newsubquestion}{\stepcounter{SubQuestionCounter}}
+
+
+\lstset{language=[LaTeX]TeX,basicstyle=\ttfamily\bf}
+
+\pagestyle{myheadings}
+\markboth{Homework 2}{Fall 2022 CS 475/675 Machine Learning: Homework 2}
+
+\title{CS 475/675 Machine Learning: Homework 2\\
+Analytical Questions\\
+\Large{15 Points Total \hspace{1cm} Version 1.1}
+\author{PARTNER1\_NAME, PARTER2\_NAME (PARTNER1\_JHED, PARTNER2\_JHED)}}
+\date{}
+
+\begin{document}
+\maketitle
+\thispagestyle{headings}
+
+
+\section*{Instructions }
+We have provided this \LaTeX{} document for completing the analytical portion of the assignment. We give you one or more boxes to answer each question.  The question to answer for each box will be noted in the title of the box.\\
+
+{\bf Other than your name, do not type anything outside the boxes. Leave the rest of the document unchanged.}\\
+
+
+\textbf{Do not change any formatting in this document, or we may be unable to
+  grade your work. This includes, but is not limited to, the height of
+  textboxes, font sizes, and the spacing of text and tables.  Additionally, do
+  not add text outside of the answer boxes. Entering your answers are the only
+  changes allowed.}\\
+
+
+\textbf{We strongly recommend you review your answers in the generated PDF to
+  ensure they appear correct. We will grade what appears in the answer boxes in
+  the submitted PDF, NOT the original latex file.}
+
+\pagebreak
+
+\section*{ Notation}
+{
+\centering
+\smallskip\begin{tabular}{r l}
+\(\vec{x_i}\) & One input data vector. \(\vec{x_i}\) is \(M\) dimensional.
+\(\vec{x_i} \in \mathbb{R}^{1 \times M}\).  \\ &
+We assume $\vec{x_i}$ is augmented with a  $1$ to include a bias term. \\ \\
+\(\vec{X}\) & 	A matrix of concatenated \(\vec{x_i}\)'s. There are \(N\) input vectors, so \(\vec{X} \in \mathbb{R}^{N \times M}\) \\ \\
+\(y_i\) & The true label for input vector \(\vec{x_i}\). In regression problems, \(y_i\) is continuous. \\ & In general ,\(y_i\) can be a vector, but for now we assume it's a scalar: \(y_i \in \mathbb{R}^1\). \\ \\
+
+\(\vec{y}\) & 	A vector of concatenated \(y_i\)'s. There are \(N\) input vectors, so \(\vec{y} \in \mathbb{R}^{N \times 1}\) \\ \\
+
+\(\vec{w}\) & A weight vector. We are trying to learn the elements of \(\vec{w}\). \\
+& \(\vec{w}\) is the same number of elements as \(\vec{x_i}\) because we will end up computing \\
+& the dot product \(\vec{x_i} \cdot \vec{w}\). \\
+& \(\vec{w} \in \mathbb{R}^{M \times 1}\). We assume the bias term is included in \(\vec{w}\). \\ \\
+
+ 
+i.i.d. & Independently and identically distributed. \\ \\
+
+ Notes: & In general, a lowercase letter (not boldface), $a$, indicates a scalar. \\
+  & A boldface lowercase letter, $\vec{a}$, indicates a vector. \\  &  A boldface uppercase letter, $\vec{A}$, indicates a matrix. \\
+\end{tabular}
+}
+
+
+\pagebreak
+
+
+
+
+\newquestion
+\section*{\arabic{QuestionCounter}) 
+SVMs (2.0 points)} 
+
+Consider a linear SVM classifier, it can be trained using the primal or the dual formulation. If $\alpha_i$'s are dual parameters for the linear SVM, explain why only few of them will be non-zero in a linearly separable case (hint: you may need to use the dual formulation and the KKT conditions). 
+
+\begin{enumerate}[(1)]
+
+
+
+\begin{answertext}{18cm}{}
+
+
+
+\end{answertext}
+
+
+
+
+\end{enumerate}
+
+
+\newquestion
+\section*{\arabic{QuestionCounter})
+Kernels (8.0 points)}
+The kernel trick extends SVMs to learn nonlinear functions. However, an improper use of a kernel function can cause serious over-fitting. Consider the following kernels.
+\begin{enumerate}[(1)]
+\item (3.0 points) Inverse Polynomial kernel: given $\|x\|_2\leq 1$ and $\|x'\|_2\leq 1$, we define $K(x, x') = 1/(d-x^\top x')$, where $d\geq 2$. Does increasing $d$ make over-fitting more or less likely?\\
+
+\begin{answertext}{8cm}{}
+
+\end{answertext}
+
+\item (2.0 points) Gaussian kernel: $K(x, x') = \exp(-|| x-x'||^2 / 2 \sigma^2)$, where $\sigma>0$. Does increasing $\sigma$ make over-fitting more or less likely?\\
+
+\begin{answertext}{8cm}{}
+
+\end{answertext}
+
+\item (3.0 points) Let $K_1$ and $K_2$ be two kernel functions. Prove that $K(x_i,x_{i'}) = K_1(x_i,x_{i'}) + K_2(x_i,x_{i'})$ is also a kernel function.\\
+\begin{answertext}{16cm}{}
+
+
+\end{answertext}
+
+\end{enumerate}
+
+
+
+\newquestion
+\section*{\arabic{QuestionCounter})
+Hinge Loss (5.0 points)}
+
+The hinge loss takes the following form:
+\begin{eqnarray}
+\label{svm}
+\ell_h(y,x) = \max (0, 1 - y (w \cdot x)),
+\end{eqnarray}
+
+Consider instead the ``super hinge'' loss which takes the form:
+\begin{eqnarray}
+\label{svm_1}
+\ell_{sh}(y,x) = \max (0, 10 - y (w \cdot x)),
+\end{eqnarray}
+
+
+
+Write the SVM objective and constraints that corresponds to the super hinge loss. Show and prove the relationship between $w_h$ (the solution to the hinge loss SVM objective) and $w_{sh}$ (the solution to the super hinge loss SVM objective.)\\
+\begin{answertext}{18cm}{}
+
+
+
+
+\end{answertext}
+ 
+
+
+\end{document}
