@@ -157,9 +157,11 @@ criterion = nn.NLLLoss()
 list_of_pairs = get_xy_pairs(names)
 train_x, train_y, test_x, test_y = create_train_and_test_set(list_of_pairs)
 
-def cross_entropy_plot():
+def cross_entropy_plot(n_epochs, stratified = False):
     all_losses_train = []
     all_losses_test = []
+    if stratified:
+        train_x, train_y, test_x, test_y = stratified_train_and_test_set(list_of_pairs)
     for epoch in range(1, n_epochs+1):
         loss_train = train(train_x, train_y)
         loss_test = test(test_x, test_y)/len(test_x)
