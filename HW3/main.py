@@ -17,7 +17,7 @@ import numpy as np
 n_letters=58
 n_categories=18
 n_hidden = 128
-
+n_epoch = 100
 print_every = 5000
 plot_every = 1000
 learning_rate = 0.0005 # If you set this too high, it might explode. If too low, it might not learn
@@ -107,11 +107,11 @@ def train(train_x, train_y):
         hidden = rnn.initHidden()
         for i in range(x.size()[0]):
             output, hidden = rnn(x[i], hidden)
-        loss += criterion(torch.log(output + 1e-6), y.unsqueeze(0))
+        loss += criterion(torch.log(output), y.unsqueeze(0))
 
-#         loss = criterion(torch.log(output + 1e-6), y.unsqueeze(0)) #the unsqueeze converts the scalar y to a 1D tensor
+        #loss = criterion(torch.log(output + 1e-6), y.unsqueeze(0)) #the unsqueeze converts the scalar y to a 1D tensor
 #         optimizer.zero_grad()
-#         loss.backward()
+#         loss.backward() 
 #         optimizer.step()
     optimizer.zero_grad()
     loss.backward()
@@ -122,14 +122,13 @@ def train(train_x, train_y):
 def test(test_x, test_y):
     """train_x and train_y are lists with names and correspoonding labels"""
     loss = 0
-    losses = []
     with torch.no_grad(): 
         for x, y in zip(test_x, test_y):
             hidden = rnn.initHidden()
             for i in range(x.size()[0]):
                 output, hidden = rnn(x[i], hidden)
             
-            loss += criterion(torch.log(output + 1e-6), y.unsqueeze(0))
+            loss += criterion(torch.log(output), y.unsqueeze(0))
 
     return loss.item()
 
