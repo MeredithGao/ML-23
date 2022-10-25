@@ -107,11 +107,15 @@ def train(train_x, train_y):
         hidden = rnn.initHidden()
         for i in range(x.size()[0]):
             output, hidden = rnn(x[i], hidden)
+        loss += criterion(torch.log(output + 1e-6), y.unsqueeze(0))
 
-        loss = criterion(torch.log(output + 1e-6), y.unsqueeze(0)) #the unsqueeze converts the scalar y to a 1D tensor
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
+#         loss = criterion(torch.log(output + 1e-6), y.unsqueeze(0)) #the unsqueeze converts the scalar y to a 1D tensor
+#         optimizer.zero_grad()
+#         loss.backward()
+#         optimizer.step()
+    optimizer.zero_grad()
+    loss.backward()
+    optimizer.step()
 
     return loss.item()
 
