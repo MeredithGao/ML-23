@@ -17,7 +17,7 @@ import numpy as np
 n_letters=58
 n_categories=18
 n_hidden = 128
-n_epochs = 100
+
 print_every = 5000
 plot_every = 1000
 learning_rate = 0.0005 # If you set this too high, it might explode. If too low, it might not learn
@@ -153,15 +153,13 @@ names_list = list(names.keys())
 rnn = RNN(n_letters, n_hidden, n_categories)
 optimizer = torch.optim.SGD(rnn.parameters(), lr=learning_rate)
 criterion = nn.NLLLoss()
-
 list_of_pairs = get_xy_pairs(names)
+#train_x, train_y, test_x, test_y = stratified_train_and_test_set(list_of_pairs)
 train_x, train_y, test_x, test_y = create_train_and_test_set(list_of_pairs)
 
-def cross_entropy_plot(n_epochs, stratified = False):
+def cross_entropy_plot(n_epochs):
     all_losses_train = []
     all_losses_test = []
-    if stratified:
-        train_x, train_y, test_x, test_y = stratified_train_and_test_set(list_of_pairs)
     for epoch in range(1, n_epochs+1):
         loss_train = train(train_x, train_y)
         loss_test = test(test_x, test_y)/len(test_x)
@@ -179,27 +177,27 @@ def cross_entropy_plot(n_epochs, stratified = False):
     plt.show()
     
 def plotConfusionMatrix():
-        true = []
-        pred = []
-        with torch.no_grad(): 
-            for x, y in zip(test_x, test_y):
-                # get true label corresponding to y
-                true.append(names_list[y])
-                # get the predicted label by chooosing the max from output
-                output = get_output(rnn, x)
-                topv, topi = torch.max(output, 1)
-                pred.append(names_list[topi.item()])
+    true = []
+    pred = []
+    with torch.no_grad(): 
+        for x, y in zip(test_x, test_y):
+            # get true label corresponding to y
+            true.append(names_list[y])
+            # get the predicted label by chooosing the max from output
+            output = get_output(rnn, x)
+            topv, topi = torch.max(output, 1)
+            pred.append(names_list[topi.item()])
 
-        cm = confusion_matrix(true, pred, normalize='pred')
-        cm = np.round(cm, 2)
+    cm = confusion_matrix(true, pred, normalize='true')
+    cm = np.round(cm, 2)
 
-        cmp = ConfusionMatrixDisplay(cm, display_labels=names.keys())
-        fig, ax = plt.subplots(figsize=(10,10))
-        cmp.plot(xticks_rotation=90, ax=ax)
+    cmp = ConfusionMatrixDisplay(cm, display_labels=names.keys())
+    fig, ax = plt.subplots(figsize=(10,10))
+    cmp.plot(xticks_rotation=90, ax=ax)
 
-        plt.show()
+    plt.show()
 
-def accuracy(test_x, test_y):
+def accuracy():
     correct = 0
     with torch.no_grad():
         for x, y in zip(test_x, test_y):
@@ -212,12 +210,6 @@ def accuracy(test_x, test_y):
 
     return correct / len(test_x)
 
-def stratified_sampling():
-    accu_ori = accuracy(test_x, test_y)
-    str_train_x, str_train_y, str_test_x, str_test_y = stratified_train_and_test_set(list_of_pairs)
-    accu_str = accuracy(str_test_x, str_test_y)
-
-    return accu_ori, accu_str
 
 
 #saving your model
